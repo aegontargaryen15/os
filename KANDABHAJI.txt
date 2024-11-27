@@ -1,0 +1,1670 @@
+﻿OS ASSIGNMENTS
+
+
+steps to download python in ubuntu:
+
+
+sudo apt update
+
+
+sudo apt install python3
+
+
+sudo apt install python3-pip
+
+
+python3 --version
+
+
+pip3 --version
+
+
+
+
+1. Banker’s Algorithm:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as banker.py and save it in the previously created OS folder
+
+
+
+
+# Banker's Algorithm in Python
+
+
+def calculate_need(maximum, allocation):
+    """
+    Calculate the need matrix based on maximum and allocation matrices.
+    """
+    return [[maximum[i][j] - allocation[i][j] for j in range(len(maximum[0]))] for i in range(len(maximum))]
+
+
+def is_safe_state(processes, available, maximum, allocation):
+    """
+    Check if the system is in a safe state and find the safe sequence.
+    """
+    need = calculate_need(maximum, allocation)
+    n, m = len(processes), len(available)  # Number of processes and resources
+
+
+    finish = [False] * n  # Tracks if a process is completed
+    safe_sequence = []  # Stores the safe sequence
+    work = available[:]  # Copy of available resources
+
+
+    while len(safe_sequence) < n:
+        found = False
+        for i in range(n):
+            if not finish[i]:
+                # Check if resources can satisfy the need of process i
+                if all(need[i][j] <= work[j] for j in range(m)):
+                    # If satisfied, allocate resources and mark process as finished
+                    for j in range(m):
+                        work[j] += allocation[i][j]
+                    safe_sequence.append(processes[i])
+                    finish[i] = True
+                    found = True
+                    break
+        if not found:
+            # No process could be allocated, unsafe state
+            return False, []
+
+
+    return True, safe_sequence
+
+
+# Input: Number of processes and resources
+n = int(input("Enter number of processes: "))
+m = int(input("Enter number of resource types: "))
+
+
+processes = [f"P{i}" for i in range(n)]
+
+
+# Input: Allocation matrix
+print("\nEnter allocation matrix:")
+allocation = [list(map(int, input(f"Process {i}: ").split())) for i in range(n)]
+
+
+# Input: Maximum matrix
+print("\nEnter maximum matrix:")
+maximum = [list(map(int, input(f"Process {i}: ").split())) for i in range(n)]
+
+
+# Input: Available resources
+print("\nEnter available resources:")
+available = list(map(int, input().split()))
+
+
+# Perform safety check
+is_safe, safe_sequence = is_safe_state(processes, available, maximum, allocation)
+
+
+if is_safe:
+    print("\nSystem is in a safe state.")
+    print("Safe Sequence:", " -> ".join(safe_sequence))
+else:
+    print("\nSystem is not in a safe state.")
+
+
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 banker.py
+
+
+Now put the following prompts:
+
+
+1. For Safe State:
+
+
+Enter the number of processes: 5
+Enter the number of resource types: 3
+
+
+Enter the Allocated Resources matrix (one row per process):
+Process 0: 0 1 0
+Process 1: 2 0 0
+Process 2: 3 0 2
+Process 3: 2 1 1
+Process 4: 0 0 2
+
+
+Enter the Max Resources matrix (one row per process):
+Process 0: 7 5 3
+Process 1: 3 2 2
+Process 2: 9 0 2
+Process 3: 2 2 2
+Process 4: 4 3 3
+
+
+Enter the Available Resources (space-separated):
+3 3 2
+
+
+
+
+2. For Unsafe State:
+
+
+Enter the number of processes: 4
+Enter the number of resource types: 2
+Enter the Allocated Resources matrix (one row per process):
+Process 0: 2 1
+Process 1: 1 1
+Process 2: 2 2
+Process 3: 0 0
+
+
+Enter the Max Resources matrix (one row per process):
+Process 0: 3 2
+Process 1: 2 2
+Process 2: 3 3
+Process 3: 1 1
+
+
+Enter the Available Resources (space-separated):
+0 1
+
+
+
+
+https://chatgpt.com/share/6745f922-2294-8008-8e3f-e1ade9fd9fff
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+2) Page replacement algorithm : 
+
+
+1. FIFO:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as pagefifo.py and save it in the previously created OS folder
+
+
+def fifo(page_sequence, frame_count):
+    frames = []
+    page_faults = 0
+
+
+    for page in page_sequence:
+        if page not in frames:
+            if len(frames) < frame_count:
+                frames.append(page)
+            else:
+                frames.pop(0)
+                frames.append(page)
+            page_faults += 1
+        print(f"Frames: {frames}")
+    print(f"Total Page Faults: {page_faults}")
+
+
+pages = list(map(int, input("Enter page sequence (space-separated): ").split()))
+frame_count = int(input("Enter number of frames: "))
+fifo(pages, frame_count)
+
+
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 pagefifo.py
+* Now put the following prompts:
+
+
+Enter the reference string (space-separated): 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1
+Enter the frame size (positive integer): 3
+
+
+https://chatgpt.com/share/6745fbdb-65ac-8008-a783-d64b444c1e78
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+2) Page replacement algorithm : 
+
+
+2. LRU:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as pagelru.py and save it in the previously created OS folder
+
+
+
+
+def lru(page_sequence, frame_count):
+    frames = []
+    page_faults = 0
+
+
+    for page in page_sequence:
+        if page not in frames:
+            if len(frames) < frame_count:
+                frames.append(page)
+            else:
+                least_used = frames.pop(0)
+                frames.append(page)
+            page_faults += 1
+        else:
+            frames.remove(page)
+            frames.append(page)
+        print(f"Frames: {frames}")
+    print(f"Total Page Faults: {page_faults}")
+
+
+pages = list(map(int, input("Enter page sequence (space-separated): ").split()))
+frame_count = int(input("Enter number of frames: "))
+lru(pages, frame_count)
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 pagelru.py
+* Now put the following prompts:
+
+
+Enter the reference string (space-separated): 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1
+Enter the frame size (positive integer): 3
+
+
+
+
+https://chatgpt.com/share/6745fbdb-65ac-8008-a783-d64b444c1e78
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+
+
+2) Page replacement algorithm : 
+
+
+3. OPT:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as pagelru.py and save it in the previously created OS folder
+
+
+
+
+def optimal(page_sequence, frame_count):
+    frames = []
+    page_faults = 0
+
+
+    for i in range(len(page_sequence)):
+        page = page_sequence[i]
+        if page not in frames:
+            if len(frames) < frame_count:
+                frames.append(page)
+            else:
+                future_indices = [page_sequence[i:].index(frame) if frame in page_sequence[i:] else float('inf') for frame in frames]
+                farthest_index = future_indices.index(max(future_indices))
+                frames[farthest_index] = page
+            page_faults += 1
+        print(f"Frames: {frames}")
+    print(f"Total Page Faults: {page_faults}")
+
+
+pages = list(map(int, input("Enter page sequence (space-separated): ").split()))
+frame_count = int(input("Enter number of frames: "))
+optimal(pages, frame_count)
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 opt_page_replacement.py
+* Now put the following prompts:
+
+
+
+
+Enter the reference string (space-separated): 7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1
+Enter the frame size (positive integer): 3
+
+
+
+
+https://chatgpt.com/share/6745fbdb-65ac-8008-a783-d64b444c1e78
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+3) Scheduling Algorithm : 
+
+
+1. FCFS:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as schedulingfcfs.py and save it in the previously created OS folder
+
+
+
+
+# FCFS Scheduling Algorithm
+
+
+def fcfs_scheduling(processes, burst_times):
+    n = len(processes)
+    wait_times = [0] * n
+    turnaround_times = [0] * n
+
+
+    # Calculating waiting time
+    for i in range(1, n):
+        wait_times[i] = wait_times[i - 1] + burst_times[i - 1]
+
+
+    # Calculating turnaround time
+    for i in range(n):
+        turnaround_times[i] = wait_times[i] + burst_times[i]
+
+
+    # Display results
+    print("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time")
+    for i in range(n):
+        print(f"{processes[i]}\t{burst_times[i]}\t\t{wait_times[i]}\t\t{turnaround_times[i]}")
+    
+    print(f"\nAverage Waiting Time: {sum(wait_times)/n:.2f}")
+    print(f"Average Turnaround Time: {sum(turnaround_times)/n:.2f}")
+
+
+
+
+# User Input
+n = int(input("Enter the number of processes: "))
+processes = [f"P{i+1}" for i in range(n)]
+burst_times = [int(input(f"Enter burst time for {processes[i]}: ")) for i in range(n)]
+
+
+fcfs_scheduling(processes, burst_times)
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 schedulingfcfs.py
+* Now put the following prompts:
+
+
+Enter the number of processes: 3
+Enter burst time for P1: 4
+Enter burst time for P2: 3
+Enter burst time for P3: 2
+
+
+
+
+https://chatgpt.com/share/6745fdbb-bcc4-8008-aec9-e8168c5aedd9
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+3) Scheduling Algorithm : 
+
+
+2. SJT:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as schedulingsjt.py and save it in the previously created OS folder
+
+
+
+
+# SJT Scheduling Algorithm
+
+
+def sjt_scheduling(processes, burst_times):
+    n = len(processes)
+    sorted_indices = sorted(range(n), key=lambda i: burst_times[i])
+    processes = [processes[i] for i in sorted_indices]
+    burst_times = [burst_times[i] for i in sorted_indices]
+
+
+    wait_times = [0] * n
+    turnaround_times = [0] * n
+
+
+    # Calculating waiting time
+    for i in range(1, n):
+        wait_times[i] = wait_times[i - 1] + burst_times[i - 1]
+
+
+    # Calculating turnaround time
+    for i in range(n):
+        turnaround_times[i] = wait_times[i] + burst_times[i]
+
+
+    # Display results
+    print("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time")
+    for i in range(n):
+        print(f"{processes[i]}\t{burst_times[i]}\t\t{wait_times[i]}\t\t{turnaround_times[i]}")
+    
+    print(f"\nAverage Waiting Time: {sum(wait_times)/n:.2f}")
+    print(f"Average Turnaround Time: {sum(turnaround_times)/n:.2f}")
+
+
+
+
+# User Input
+n = int(input("Enter the number of processes: "))
+processes = [f"P{i+1}" for i in range(n)]
+burst_times = [int(input(f"Enter burst time for {processes[i]}: ")) for i in range(n)]
+
+
+sjt_scheduling(processes, burst_times)
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 schedulingsjt.py
+* Now put the following prompts:
+
+
+Enter the number of processes: 4
+Enter burst time for P1: 8
+Enter burst time for P2: 4
+Enter burst time for P3: 2
+Enter burst time for P4: 6
+
+
+
+
+https://chatgpt.com/share/6745fdbb-bcc4-8008-aec9-e8168c5aedd9
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+Scheduling Algorithm : 
+
+
+3. Priority Scheduling:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as schedulingpriority.py and save it in the previously created OS folder
+
+
+
+
+# SJT Scheduling Algorithm
+
+
+def sjt_scheduling(processes, burst_times):
+    n = len(processes)
+    sorted_indices = sorted(range(n), key=lambda i: burst_times[i])
+    processes = [processes[i] for i in sorted_indices]
+    burst_times = [burst_times[i] for i in sorted_indices]
+
+
+    wait_times = [0] * n
+    turnaround_times = [0] * n
+
+
+    # Calculating waiting time
+    for i in range(1, n):
+        wait_times[i] = wait_times[i - 1] + burst_times[i - 1]
+
+
+    # Calculating turnaround time
+    for i in range(n):
+        turnaround_times[i] = wait_times[i] + burst_times[i]
+
+
+    # Display results
+    print("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time")
+    for i in range(n):
+        print(f"{processes[i]}\t{burst_times[i]}\t\t{wait_times[i]}\t\t{turnaround_times[i]}")
+    
+    print(f"\nAverage Waiting Time: {sum(wait_times)/n:.2f}")
+    print(f"Average Turnaround Time: {sum(turnaround_times)/n:.2f}")
+
+
+
+
+# User Input
+n = int(input("Enter the number of processes: "))
+processes = [f"P{i+1}" for i in range(n)]
+burst_times = [int(input(f"Enter burst time for {processes[i]}: ")) for i in range(n)]
+
+
+sjt_scheduling(processes, burst_times)
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 schedulingpriority.py
+* Now put the following prompts:
+
+
+
+
+Enter the number of processes: 3
+Enter burst time for P1: 5
+Enter burst time for P2: 3
+Enter burst time for P3: 8
+Enter priority for P1 (lower is higher priority): 2
+Enter priority for P2 (lower is higher priority): 1
+Enter priority for P3 (lower is higher priority): 3
+
+
+
+
+https://chatgpt.com/share/6745fdbb-bcc4-8008-aec9-e8168c5aedd9
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+4) Producer Consumer Problem:
+
+
+1. SEMAPHORE AND THREAD:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as procon1.py and save it in the previously created OS folder
+
+
+
+
+#USING THREADS AND SEMAPHOREimport threading
+import time
+import random
+
+
+# Buffer and Semaphore
+buffer = []
+buffer_size = int(input("Enter buffer size: "))
+full = threading.Semaphore(0)
+empty = threading.Semaphore(buffer_size)
+lock = threading.Lock()
+
+
+# Producer Function
+def producer():
+    while True:
+        item = random.randint(1, 100)
+        empty.acquire()
+        lock.acquire()
+        buffer.append(item)
+        print(f"Produced: {item}, Buffer: {buffer}")
+        lock.release()
+        full.release()
+        time.sleep(random.random())
+
+
+# Consumer Function
+def consumer():
+    while True:
+        full.acquire()
+        lock.acquire()
+        item = buffer.pop(0)
+        print(f"Consumed: {item}, Buffer: {buffer}")
+        lock.release()
+        empty.release()
+        time.sleep(random.random())
+
+
+# Creating Threads
+producer_thread = threading.Thread(target=producer)
+consumer_thread = threading.Thread(target=consumer)
+
+
+producer_thread.start()
+consumer_thread.start()
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 procon1.py
+* Now put the following prompts:
+
+
+Enter buffer size: 3
+
+
+https://chatgpt.com/share/67460192-a6b8-8008-a67c-1ce08ee62508
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+4) Producer Consumer Problem:
+
+
+2. MUTEX AND THREAD:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as procon2.py and save it in the previously created OS folder
+
+
+import threading
+import time
+import random
+
+
+# Buffer and Lock
+buffer = []
+buffer_size = int(input("Enter buffer size: "))
+mutex = threading.Lock()
+
+
+# Condition Variables
+not_full = threading.Condition(mutex)
+not_empty = threading.Condition(mutex)
+
+
+# Producer Function
+def producer():
+    while True:
+        item = random.randint(1, 100)
+        with not_full:
+            while len(buffer) == buffer_size:
+                not_full.wait()
+            buffer.append(item)
+            print(f"Produced: {item}, Buffer: {buffer}")
+            not_empty.notify()
+        time.sleep(random.random())
+
+
+# Consumer Function
+def consumer():
+    while True:
+        with not_empty:
+            while not buffer:
+                not_empty.wait()
+            item = buffer.pop(0)
+            print(f"Consumed: {item}, Buffer: {buffer}")
+            not_full.notify()
+        time.sleep(random.random())
+
+
+# Creating Threads
+producer_thread = threading.Thread(target=producer)
+consumer_thread = threading.Thread(target=consumer)
+
+
+producer_thread.start()
+consumer_thread.start()
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 procon2.py
+* Now put the following prompts:
+
+
+Enter buffer size: 3
+
+
+https://chatgpt.com/share/67460192-a6b8-8008-a67c-1ce08ee62508
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+5) Reader Writer Problem:
+
+
+1. Mutex and Thread:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as readwrite1.py and save it in the previously created OS folder
+
+
+
+
+                                      #USING MUTEX AND THREAD
+
+
+import threading
+import time
+
+
+# Shared variables
+data = 0
+read_count = 0
+mutex = threading.Lock()
+write_lock = threading.Lock()
+
+
+def reader(reader_id):
+    global read_count
+    while True:
+        with mutex:
+            read_count += 1
+            if read_count == 1:
+                write_lock.acquire()
+        # Reading data
+        print(f"Reader {reader_id} is reading data: {data}")
+        time.sleep(1)  # Simulate reading
+        with mutex:
+            read_count -= 1
+            if read_count == 0:
+                write_lock.release()
+        time.sleep(1)
+
+
+def writer(writer_id):
+    global data
+    while True:
+        write_lock.acquire()
+        # Writing data
+        data += 1
+        print(f"Writer {writer_id} updated data to: {data}")
+        time.sleep(1)  # Simulate writing
+        write_lock.release()
+        time.sleep(1)
+
+
+# User input
+num_readers = int(input("Enter number of readers: "))
+num_writers = int(input("Enter number of writers: "))
+
+
+threads = []
+for i in range(num_readers):
+    t = threading.Thread(target=reader, args=(i+1,))
+    threads.append(t)
+    t.start()
+
+
+for i in range(num_writers):
+    t = threading.Thread(target=writer, args=(i+1,))
+    threads.append(t)
+    t.start()
+
+
+for t in threads:
+    t.join()
+
+
+
+
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 readwrite1.py
+* Now put the following prompts:
+
+
+Enter number of readers: 2
+Enter number of writers: 3
+
+
+
+
+https://chatgpt.com/share/674603dc-85a4-8008-a370-4bbe984c049f
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+
+
+5) Reader Writer Problem:
+
+
+2. Mutex and Thread:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as readwrite2.py and save it in the previously created OS folder
+
+
+                                   #USING SEMAPHORE AND THREAD
+
+
+import threading
+import time
+
+
+# Shared variables
+data = 0
+read_count = 0
+read_count_lock = threading.Semaphore(1)
+write_lock = threading.Semaphore(1)
+
+
+def reader(reader_id):
+    global read_count
+    while True:
+        read_count_lock.acquire()
+        read_count += 1
+        if read_count == 1:
+            write_lock.acquire()
+        read_count_lock.release()
+        
+        # Reading data
+        print(f"Reader {reader_id} is reading data: {data}")
+        time.sleep(1)  # Simulate reading
+
+
+        read_count_lock.acquire()
+        read_count -= 1
+        if read_count == 0:
+            write_lock.release()
+        read_count_lock.release()
+        time.sleep(1)
+
+
+def writer(writer_id):
+    global data
+    while True:
+        write_lock.acquire()
+        # Writing data
+        data += 1
+        print(f"Writer {writer_id} updated data to: {data}")
+        time.sleep(1)  # Simulate writing
+        write_lock.release()
+        time.sleep(1)
+
+
+# User input
+num_readers = int(input("Enter number of readers: "))
+num_writers = int(input("Enter number of writers: "))
+
+
+threads = []
+for i in range(num_readers):
+    t = threading.Thread(target=reader, args=(i+1,))
+    threads.append(t)
+    t.start()
+
+
+for i in range(num_writers):
+    t = threading.Thread(target=writer, args=(i+1,))
+    threads.append(t)
+    t.start()
+
+
+for t in threads:
+    t.join()
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 readwrite2.py
+* Now put the following prompts:
+
+
+Enter number of readers: 2
+Enter number of writers: 3
+
+
+
+
+https://chatgpt.com/share/674603dc-85a4-8008-a370-4bbe984c049f
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+6) Problems on AWK Script:
+
+
+1. To make a report:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below details and give file name as student_records.txt and save it in the previously created OS folder
+
+
+Aryan 60 65 55
+Shriyog 75 80 85
+Naresh 35 40 45
+Rushikesh 58 62 68
+Shivraj 70 85 25
+Bakul 55 70 55
+Saee 36 74 38
+Parvez 59 63 98
+
+
+
+
+* Now Navigate to Text Editor and paste the below code and give file name as awkstu.py and save it in the previously created OS folder
+
+
+
+
+# Function to calculate result based on total marks and percentage
+def calculate_result(total_marks, percentage):
+    if percentage < 40:
+        return "Fail"
+    elif 60 <= percentage <= 65:
+        return "First Class"
+    elif percentage > 66:
+        return "Distinction"
+    else:
+        return "Pass"
+
+
+# Function to process student records from a file
+def process_student_records(file_name):
+    try:
+        # Open the student record file
+        with open(file_name, 'r') as file:
+            records = file.readlines()
+
+
+        # Process each student record
+        for record in records:
+            # Strip any leading/trailing whitespace and skip blank lines
+            record = record.strip()
+            if not record:
+                continue
+
+
+            # Split the record by spaces/tabs to extract student data
+            data = record.split()
+            if len(data) < 4:  # Ensure there are at least 4 fields (name + 3 marks)
+                print(f"Skipping invalid record: {record}")
+                continue
+
+
+            name = data[0]
+            try:
+                marks = list(map(int, data[1:]))  # Convert subject marks to integers
+            except ValueError:
+                print(f"Skipping record with invalid marks: {record}")
+                continue
+
+
+            total_marks = sum(marks)  # Calculate total marks
+            percentage = (total_marks / len(marks))  # Calculate percentage
+
+
+            # Determine the result
+            result = calculate_result(total_marks, percentage)
+
+
+            # Print the student's result
+            print(f"Student: {name}")
+            print(f"Total Marks: {total_marks}")
+            print(f"Percentage: {percentage:.2f}%")
+            print(f"Result: {result}\n")
+
+
+    except FileNotFoundError:
+        print(f"Error: The file '{file_name}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+# User input for the file containing student records
+file_name = input("Enter the name of the student record file (e.g., 'student_records.txt'): ")
+process_student_records(file_name)
+
+
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 awkstu.py
+* Now put the following prompts:
+
+
+
+
+Enter the name of the student record file (e.g., 'student_records.txt'): student_records.txt
+
+
+
+
+https://chatgpt.com/share/67460a19-b4ec-8008-8cb8-32a3ce1ef329
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+
+
+7) Shell program
+
+
+1. Palindrome:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as palindrome.py and save it in the previously created OS folder
+
+
+# Get user input
+user_input = input("Enter a string: ")
+
+
+# Remove spaces and convert to lowercase for uniform comparison
+cleaned_input = user_input.replace(" ", "").lower()
+
+
+# Check if the cleaned string is equal to its reverse
+if cleaned_input == cleaned_input[::-1]:
+    print("The string is a palindrome.")
+else:
+    print("The string is not a palindrome.")
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 palindrome.py
+
+
+Enter the Following Strings:
+
+
+Madam: The string is Palidrome
+Bucket: The String is not palindrome
+
+
+https://chatgpt.com/share/674615f9-2454-800d-b07d-06548277403b
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+7) Shell program
+
+
+2. Arithmetic Operations:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as arithmetic.py and save it in the previously created OS folder
+
+
+
+
+while True:
+# Display operation choices
+    print("\nChoose an operation:")
+    print("1. Addition")
+    print("2. Subtraction")
+    print("3. Multiplication")
+    print("4. Division")
+    print("5. Exit")
+
+
+    # Get user choice
+    operation = input("Enter the number corresponding to the operation (1/2/3/4/5): ")
+# Get user input
+    num1 = float(input("Enter the first number: "))
+    num2 = float(input("Enter the second number: "))
+# Perform the chosen operation
+    if operation == '1':
+        result = num1 + num2
+        print(f"Addition: {num1} + {num2} = {result}")
+    elif operation == '2':
+        result = num1 - num2
+        print(f"Subtraction: {num1} - {num2} = {result}")
+    elif operation == '3':
+        result = num1 * num2
+        print(f"Multiplication: {num1} * {num2} = {result}")
+    elif operation == '4':
+        if num2 != 0:
+            result = num1 / num2
+            print(f"Division: {num1} / {num2} = {result}")
+        else:
+            print("Error: Division by zero is not allowed.")
+    elif operation == '5':
+        print("Exiting the program.")
+        break
+    else:
+        print("Invalid choice. Please select a valid operation (1/2/3/4/5).")
+
+
+    # Ask if the user wants to perform another operation
+    continue_choice = input("\nDo you want to perform another operation? (y/n): ").strip().lower()
+    if continue_choice != 'y':
+        print("Exiting the program.")
+        break
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 arithmetic.py
+
+
+
+
+https://chatgpt.com/share/67461ebb-5230-800d-ad28-57e7665d39eb
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+7) Shell program
+
+
+3. Number of Occurrences:
+
+
+1. User Input:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as noc_user.py and save it in the previously created OS folder
+
+
+
+
+# Get user input
+text = input("Enter a string of text: ")
+
+
+# Get the word to count occurrences of
+word = input("Enter the word to count occurrences: ")
+
+
+# Count the occurrences of the word in the text
+count = text.split().count(word)
+
+
+# Display the result
+print(f"The word '{word}' appears {count} time(s) in the text.")
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 noc_user.py
+
+
+
+
+
+
+2. Txt File occurrences:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as noc_file.py and save it in the previously created OS folder
+
+
+
+
+# Read the file and split into words
+file_path = input("Enter the path to the text file: ")
+
+
+try:
+    with open(file_path, 'r') as file:
+        # Read the file content
+        text = file.read()
+
+
+    # Split the content into words (similar to flatMap in Spark)
+    words = text.split()
+
+
+    # Count occurrences of each word using a dictionary (similar to map and reduceByKey in Spark)
+    word_count = {}
+    for word in words:
+        word_count[word] = word_count.get(word, 0) + 1
+
+
+    # Display the result (similar to collect in Spark)
+    for word, count in word_count.items():
+        print(f"{word}: {count}")
+
+
+except FileNotFoundError:
+    print("The file was not found. Please check the path and try again.")
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 noc_file.py
+
+
+
+
+https://chatgpt.com/share/67462b10-0884-800d-86ce-429c8df13434
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+7) Shell program
+4. Insertion Sort:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as insertion.py and save it in the previously created OS folder
+
+
+
+
+
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        # Move elements of arr[0..i-1] that are greater than key to one position ahead
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+
+# User input
+try:
+    user_input = input("Enter numbers separated by spaces: ")
+    numbers = list(map(int, user_input.split()))
+    print(f"Original list: {numbers}")
+
+
+    insertion_sort(numbers)
+    print(f"Sorted list: {numbers}")
+
+
+except ValueError:
+    print("Invalid input! Please enter integers only.")
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 insertion.py
+
+
+
+
+https://chatgpt.com/share/67462c1a-80ac-800d-b9f4-122eae198325
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+8) Substring program:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as substring.py and save it in the previously created OS folder
+
+
+
+
+def substring_check():
+    # Step 1: Start
+    print("Substring Checker")
+
+
+    # Step 2: Accept the two strings
+    string1 = input("Enter the main string: ")
+    string2 = input("Enter the substring to search for: ")
+
+
+    # Step 3 to 6: Compare character by character
+    positions = []
+    len1, len2 = len(string1), len(string2)
+
+
+    for i in range(len1 - len2 + 1):
+        match_found = True
+        for j in range(len2):
+            if string1[i + j] != string2[j]:
+                match_found = False
+                break
+        if match_found:
+            positions.append(i)
+
+
+    # Step 7: Display the result
+    if positions:
+        print(f"Substring exists at positions: {positions}")
+    else:
+        print("Substring does not exist")
+
+
+    # Step 8: Stop
+
+
+# Call the function
+substring_check()
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 substring.py
+
+
+Substring Checker
+Enter the main string: Shriyog
+Enter the substring to search for: yog
+Substring exists at positions: [4]
+
+
+https://chatgpt.com/share/6746e3d7-ecdc-800d-914a-63d904983faa
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+8) Bubble Sort program:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as bubble.py and save it in the previously created OS folder
+
+
+
+
+# Bubble Sort in Python with user input
+
+
+# Step 1: Accept how many numbers to be sorted
+n = int(input("Enter the number of elements to sort: "))
+
+
+# Step 2: Accept the numbers in an array
+num = []
+print(f"Enter {n} numbers:")
+for i in range(n):
+    num.append(int(input(f"Enter element {i+1}: ")))
+
+
+# Step 3: Initialize i to 0 (no need for j to be initialized as 0 outside the loop)
+# Step 4: Bubble Sort Process
+for i in range(n):
+    for j in range(0, n-i-1):  # Decrease the range with each pass
+        if num[j] > num[j+1]:
+            # Step 5: Swap elements if they are in the wrong order
+            num[j], num[j+1] = num[j+1], num[j]
+
+
+# Step 6: Display the sorted list
+print("Sorted list:", num)
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 bubble.py
+
+
+
+
+Enter the number of elements to sort: 5
+Enter 5 numbers:
+Enter element 1: 69
+Enter element 2: 143
+Enter element 3: 420
+Enter element 4: 100
+Enter element 5: -11
+Sorted list: [-11, 69, 100, 143, 420]
+
+
+
+
+https://chatgpt.com/share/6746e56b-7490-800d-a67c-ca6e4cdf1080
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+8) Dining Philosopher problem:
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as dining.py and save it in the previously created OS folder
+
+
+
+
+import threading
+import time
+import random
+
+
+# Constants
+NUM_PHILOSOPHERS = 5
+MAX_EATING_TIME = 3  # Time in seconds
+
+
+# Semaphores
+semaphores = [threading.Semaphore(1) for _ in range(NUM_PHILOSOPHERS)]
+states = ['thinking' for _ in range(NUM_PHILOSOPHERS)]  # Initial states of philosophers
+
+
+# Mutex for printing
+print_lock = threading.Lock()
+
+
+# Function to simulate philosopher's actions
+def philosopher(id):
+    while True:
+        # Philosopher is thinking
+        time.sleep(random.uniform(1, 3))  # Thinking time
+        print(f"Philosopher {id} is thinking.")
+
+
+        # Philosopher is hungry and wants to eat
+        states[id] = 'hungry'
+        print(f"Philosopher {id} is hungry.")
+
+
+        # Try to eat
+        try_to_eat(id)
+
+
+        # Eating
+        eating_time = random.uniform(1, MAX_EATING_TIME)
+        print(f"Philosopher {id} is eating for {eating_time:.2f} seconds.")
+        time.sleep(eating_time)
+
+
+        # Finish eating and return to thinking
+        states[id] = 'thinking'
+        print(f"Philosopher {id} is done eating.")
+
+
+def try_to_eat(id):
+    left = (id - 1) % NUM_PHILOSOPHERS
+    right = (id + 1) % NUM_PHILOSOPHERS
+
+
+    # Check if both left and right philosophers are eating
+    while states[left] == 'eating' or states[right] == 'eating':
+        time.sleep(0.1)  # Wait if left or right are eating
+
+
+    # Both left and right philosophers are not eating, philosopher can eat
+    if states[id] == 'hungry':
+        print(f"Philosopher {id} can now eat.")
+        states[id] = 'eating'
+
+
+        # Acquire semaphores for left and right forks (resources)
+        semaphores[left].acquire()
+        semaphores[right].acquire()
+
+
+        print(f"Philosopher {id} is eating...")
+
+
+        # Release semaphores after eating
+        semaphores[left].release()
+        semaphores[right].release()
+
+
+# Create threads for each philosopher
+threads = []
+for i in range(NUM_PHILOSOPHERS):
+    thread = threading.Thread(target=philosopher, args=(i,))
+    threads.append(thread)
+    thread.start()
+
+
+# Wait for all threads to finish (this is optional as the philosophers will run indefinitely)
+for thread in threads:
+    thread.join()
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 dining.py
+
+
+
+
+https://chatgpt.com/share/6746e78a-7cf0-800d-b58e-cfb7e6246209
+
+
+
+
+—------------------------------------------------------------------------------------------------------------------
+
+
+9) Round Robin Algorithm (CPU Scheduling):
+
+
+* Open Files and in Documents create a Folder Named OS 
+* Now Navigate to Text Editor and paste the below code and give file name as round_robin.py and save it in the previously created OS folder
+
+
+
+
+
+
+# Round Robin Scheduling in Python
+
+
+def calculate_turnaround_time(arrival_time, finish_time):
+    return finish_time - arrival_time
+
+
+def calculate_waiting_time(turnaround_time, burst_time):
+    return turnaround_time - burst_time
+
+
+def round_robin():
+    num_processes = int(input("Enter number of processes: "))
+    arrival_times = []
+    burst_times = []
+    processes = list(range(1, num_processes + 1))
+
+
+    for i in range(num_processes):
+        arrival_time = int(input(f"Enter arrival time for process {i + 1}: "))
+        burst_time = int(input(f"Enter burst time for process {i + 1}: "))
+        arrival_times.append(arrival_time)
+        burst_times.append(burst_time)
+
+
+    time_quantum = int(input("Enter time quantum: "))
+    
+    remaining_burst_times = burst_times.copy()  # to track remaining burst time for each process
+    current_time = 0
+    finished_processes = 0
+    finish_times = [-1] * num_processes
+    gantt_chart = []
+    waiting_times = [0] * num_processes
+    turnaround_times = [0] * num_processes
+
+
+    while finished_processes < num_processes:
+        for i in range(num_processes):
+            if arrival_times[i] <= current_time and remaining_burst_times[i] > 0:
+                gantt_chart.append(f"P{i+1}")
+                if remaining_burst_times[i] > time_quantum:
+                    current_time += time_quantum
+                    remaining_burst_times[i] -= time_quantum
+                else:
+                    current_time += remaining_burst_times[i]
+                    remaining_burst_times[i] = 0
+                    finish_times[i] = current_time
+                    finished_processes += 1
+                    turnaround_times[i] = calculate_turnaround_time(arrival_times[i], finish_times[i])
+                    waiting_times[i] = calculate_waiting_time(turnaround_times[i], burst_times[i])
+
+
+    # Display results
+    print("\nProcess\tArrival Time\tBurst Time\tFinish Time\tTurnaround Time\tWaiting Time")
+    for i in range(num_processes):
+        print(f"P{i + 1}\t{arrival_times[i]}\t\t{burst_times[i]}\t\t{finish_times[i]}\t\t{turnaround_times[i]}\t\t{waiting_times[i]}")
+
+
+    print("\nGantt Chart: ", " -> ".join(gantt_chart))
+
+
+if __name__ == "__main__":
+    round_robin()
+
+
+
+
+* Right Click on the OS folder created and Select Open in terminal
+* python3 round_robin.py
+* Now put the following prompts:
+
+
+
+
+Enter number of processes: 3
+Enter arrival time for process 1: 0
+Enter burst time for process 1: 4
+Enter arrival time for process 2: 1
+Enter burst time for process 2: 3
+Enter arrival time for process 3: 2
+Enter burst time for process 3: 2
+Enter time quantum: 2
+
+
+
+
+https://chatgpt.com/share/6746e95d-b534-800d-8d5c-d2f8f0b86b75
+
+
+—------------------------------------------------------------------------------------------------------------------
+Oh, by the way. You're all f**king welcome.
+
+
+~ Coded by Aryan & Shriyog
